@@ -19,9 +19,11 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->foreign('FK_ROLE')->references('id')->on('roles')->onDelete('cascade');
+            $table->bigInteger('FK_ROLE')->unsigned()->default(2);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('FK_ROLE')->references('id')->on('roles')->onDelete('cascade');
         });
     }
 
