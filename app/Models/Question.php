@@ -10,6 +10,16 @@ class Question extends Model
     use HasFactory;
 
     protected $fillable = [
-        'content'
+      'title',
+      'content'
     ];
+
+    public function user() {
+      return $this->belongsTo(User::class, 'FK_USER');
+    }
+
+    public function answers() {
+      return $this->hasMany(Answer::class, 'id');
+    }
+
 }

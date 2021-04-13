@@ -22,3 +22,5 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::resource('/questions', App\Http\Controllers\QuestionController::class);
+
+Route::post('/questions/{question}/answer', [App\Http\Controllers\QuestionController::class, 'answer'])->name('questions.answer');
