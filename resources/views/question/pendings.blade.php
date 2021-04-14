@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header font-weight-bold text-center">List of questions ({{ count($questions) }})</div>
+                <div class="card-header font-weight-bold text-center">Pendings for approval ({{ count($questions) }})</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -17,36 +17,28 @@
                     {{-- {{ __('You are logged in!') }} --}}
 
                     @if (count($questions) > 0)
-                      <div class="text-right mb-3">
-                        <a href="{{ route('questions.create') }}" class="btn btn-primary">Ask a question</a>
-                      </div>
                       <ul class="list-group">
                         @foreach ($questions as $question)
                           <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{{ route('questions.show', $question->id) }}">{{ $question->title }}</a>
+                            <a href="{{ route('questions.show', [$question->id, 'page' => 'pending']) }}">{{ $question->title }}</a>
                             
                             <div class="small text-secondary">
-                              <i class="fa fa-user-o" aria-hidden="true"></i>
-                              by: {{ $question->user->name }}
-                            </div>
+                              
+                              <a class="btn btn-outline-primary mr-2" href="{{ route('questions.show', [$question->id, 'page' => 'pending']) }}"><i class="fa fa-eye" aria-hidden="true"></i> Review</a>
+                              {{-- <a class="btn btn-outline-danger" href=""><i class="fa fa-times" aria-hidden="true"></i>  Deny</a> --}}
+
+                              <form class="d-inline-block" action="{{ route('questions.deny', $question) }}" method="post">
+                                @csrf
+                                @method('PUT')
+                                <button class="btn btn-outline-danger" type="submit"><i class="fa fa-times" aria-hidden="true"></i> Deny</button>
+                              </form>
+                              
                           </li>
                           {{-- <hr> --}}
                         @endforeach
                       </ul>
                     @else
                         <p class="text-center">There are no questions yet</p>
-                        <hr>
-                        <div class="text-right">
-                            <a href="{{ route('questions.create') }}" class="btn btn-primary">Ask a question</a>
-                        </div>
-                    @endif
-
-            
-
-                    @if( Session::has( 'success' ))
-                      @php
-                          alert()->info('Question pending for approval','A moderator will check your question and then approve it.');
-                      @endphp
                     @endif
                     
                 </div>

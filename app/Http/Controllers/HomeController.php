@@ -26,6 +26,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home', ['questions' => Question::all()]);
+        return view('home', ['questions' => Question::where('status', 'approved')->get()]);
     }
 }

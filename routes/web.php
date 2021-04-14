@@ -21,6 +21,14 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::resource('/questions', App\Http\Controllers\QuestionController::class);
+Route::get('/questions/pendings', [App\Http\Controllers\QuestionController::class, 'pendings'])->name('questions.pendings');
+
+Route::get('/questions/denied', [App\Http\Controllers\QuestionController::class, 'denied'])->name('questions.denied');
+
+Route::put('/question/{question}/approve', [App\Http\Controllers\QuestionController::class, 'approve'])->name('questions.approve');
+
+Route::put('/question/{question}/deny', [App\Http\Controllers\QuestionController::class, 'deny'])->name('questions.deny');
+
+Route::resource('/questions', App\Http\Controllers\QuestionController::class)->only(['create', 'store', 'show']);
 
 Route::post('/questions/{question}/answer', [App\Http\Controllers\QuestionController::class, 'answer'])->name('questions.answer');

@@ -34,9 +34,20 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
+                    @if (Auth::user())
+                      @if (Auth::user()->FK_ROLE == 1)
+                        <ul class="navbar-nav mr-auto">
+                          <li>
+                            <a class="nav-item nav-link {{ Route::currentRouteName() === 'questions.pendings' ? 'active' : ''}}" href="{{ route('questions.pendings') }}">Pendings</a>
+                          </li>
+                          <li>
+                            <a class="nav-item nav-link {{ Route::currentRouteName() === 'questions.denied' ? 'active' : ''}}" href="{{ route('questions.denied') }}">Denied</a>
+                          </li>
+                        </ul>
+                      @endif
+                    @endif
+                    
+                    
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">

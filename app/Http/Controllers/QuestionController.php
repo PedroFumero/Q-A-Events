@@ -14,6 +14,11 @@ class QuestionController extends Controller
     }
 
     public function store(Request $request) {
+
+        $request->validate([
+          'title' => 'required|min:10',
+        ]);
+
         $question = new Question;
         $question->title = $request->title;
         $question->content = $request->content;
@@ -22,17 +27,53 @@ class QuestionController extends Controller
         return redirect()->route('home')->withSuccess($question);
     }
 
-    public function show(Question $question) {
+    public function show(Question $question, Request $request) {
       $answers = Answer::where('FK_QUESTION', $question->id)->get();
-      return view('question.show', ['question' => $question, 'answers' => $answers]);
+      return view('question.show', ['question' => $question, 'answers' => $answers, 'page' => $request->page]);
     }
 
     public function answer(Request $request) {
+
+      $request->validate([
+        'content' => 'required|min:2',
+      ]);
+
       $answer = new Answer;
       $answer->content = $request->content;
       $answer->FK_QUESTION = $request->question;
       $answer->FK_USER = Auth::user()->id;
       $answer->save();
       return redirect()->back();
+    }
+
+    public function pendings() {
+      $questions = Question::where('status', 'pending')->get();
+      return view('question.pendings', ['questions' => $questions]);
+    }
+
+    public function denied() {
+      $questions = Question::where('status', 'denied')->get();
+      return view('question.denied', ['questions' => $questions]);
+    }
+
+    public function deny(Question $question) {
+      $question->status = 'denied';
+      $question->save();
+      return redirect()->route('questions.pendings');
+    }
+
+    public function approve(Request $request) {
+
+      $request->validate([
+        'content' => 'required|min:2',
+      ]);
+
+      $question = Question::find($request->question);
+      $question->status = 'approved';
+      $question->save();
+
+      $this->answer($request);
+      // return [$request->content, $request->question];
+      return redirect()->route('questions.pendings');
     }
 }
