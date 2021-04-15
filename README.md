@@ -1,7 +1,7 @@
 # Q&A Event
 ## _Simple tool to build a small forum_
 
-Build on laravel, to run the project you need follow these steps.
+Builded with laravel, to run the project you need follow these steps.
 
 - Clone the project.
 - Create an `.env` file inside the root directoty (you can clone `.env.example` file).
