@@ -9,6 +9,11 @@ use Auth;
 
 class QuestionController extends Controller
 {
+
+    public function __construct() {
+      $this->middleware('auth');
+    }
+
     public function create() {
         return view('question.create');
     }
@@ -47,16 +52,23 @@ class QuestionController extends Controller
     }
 
     public function pendings() {
+      if(Auth::user()->FK_ROLE != 1) {
+        return redirect()->route('home');
+      }
       $questions = Question::where('status', 'pending')->get();
       return view('question.pendings', ['questions' => $questions]);
     }
 
     public function denied() {
+      if(Auth::user()->FK_ROLE != 1) {
+        return redirect()->route('home');
+      }
       $questions = Question::where('status', 'denied')->get();
       return view('question.denied', ['questions' => $questions]);
     }
 
     public function deny(Question $question) {
+      
       $question->status = 'denied';
       $question->save();
       return redirect()->route('questions.pendings');
