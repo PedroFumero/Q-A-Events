@@ -10020,3 +10020,7 @@ input.form-control {
 .content-question {
   font-size: 1.15rem;
 }
+
+a:hover {
+  text-decoration: none;
+}

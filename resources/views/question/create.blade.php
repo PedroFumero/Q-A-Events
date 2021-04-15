@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Create a question - Q&A Event')
+
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/trix.css') }}">
 @endsection
@@ -10,7 +12,6 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header font-weight-bold text-center">Write your question</div>
-
                 <div class="card-body">
                     <form action="{{ route('questions.store') }}" method="post">
                         @csrf
@@ -32,8 +33,6 @@
                         </div>
                     </form>
                 </div>
-
-
             </div>
         </div>
     </div>

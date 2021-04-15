@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Show - Q&A Event')
+
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/trix.css') }}">
 @endsection
@@ -22,37 +24,30 @@
                       </div>
                     </div>
                   </div>
-                  
                 </div>
 
                 <div class="card-body">
-                  
                   <div class="trix-content content-question">{!! $question->content !!}</div>
-                    
                     <hr>
-                  
                     @if (count($answers) > 0)
                         @foreach ($answers as $answer)
-                            <div class="card p-3 rounded mb-3">
+                            <div class="card p-3 rounded mb-3 @if($answer->user->FK_ROLE === 1) border border-primary @endif">
                               {!! $answer->content !!}
                               <hr>
-
                               <div class="d-flex justify-content-between text-secondary">
-                                <p class="mb-0 small"><i class="fa fa-user-o" aria-hidden="true"></i> by: {{ $answer->user->name }}</p>
+                                <p class="mb-0 small @if($answer->user->FK_ROLE === 1) text-primary @endif"><i class="fa {{ $answer->user->FK_ROLE === 1 ? 'fa-cogs' : 'fa-user-o' }}" aria-hidden="true"></i> by: {{ $answer->user->name }}</p>
                                 <p class="mb-0 small"><i class="fa fa-calendar" aria-hidden="true"></i> on: {{ $answer->created_at }}</p>
-                              </div>
-
-                               
+                              </div> 
                             </div>
                         @endforeach
                     @endif
 
-                    @if ($page !== 'denied')
+                    @if ($question->status !== 'denied')
                       <hr>
                       <p class="text-center text-secondary">Would you like to give an answer?</p>
-                      <form action="{{ $page === 'pending' ? route('questions.approve', $question) : route('questions.answer', $question) }}" method="post">
+                      <form action="{{ $question->status === 'pending' ? route('questions.approve', $question) : route('questions.answer', $question) }}" method="post">
                           @csrf
-                          @if ($page === 'pending')
+                          @if ($question->status === 'pending')
                             @method('put')
                           @endif
                           <div class="input-group mb-3">
@@ -60,25 +55,23 @@
                             <trix-editor input="content" class="col-12 @error('content') border border-danger @enderror" placeholder="Write a complete answer..."></trix-editor>
                             @error('content')
                               <span class="small text-danger mt-1">
-                                  <strong>You need to provide an answer</strong>
+                                  <strong>You need to provide an answer.</strong>
                               </span>
                             @enderror
                           </div>
 
-                          
-
                           <div class="text-right">
-                            @if($page === 'pending')
+                            @if($question->status === 'pending')
                               <button class="btn btn-success" type="submit"><i class="fa fa-check" aria-hidden="true"></i> Approve answer</button>
                             @else
                               <button class="btn btn-primary" type="submit">Send answer</button>
                             @endif
                             <hr>
                           </div>
+                        </form>
                     @endif
-                    </form>
                     <div>
-                      @if ($page === 'pending')      
+                      @if ($question->status === 'pending')      
                           <form action="{{ route('questions.deny', $question) }}" method="post">
                             @csrf
                             @method('PUT')
