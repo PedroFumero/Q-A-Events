@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Register - Q&A Event')
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
